@@ -8,9 +8,12 @@ cxxflags.release := -03
 CXXFLAGS := -Wall -std=c++11 ${cxxflags.${BUILD}}
 
 SOURCE = ./src/main.cpp
-OBJECTS = ./src/Monitor.o
+OBJECTS = ./src/Monitor.o \
+					./src/Cond.o \
+					./src/Input.o
 
-main: ./src/lib.a $(SOURCE)
+
+dp: ./src/lib.a $(SOURCE)
 	$(CXX) $(CXXFLAGS) $(SOURCE) $(INCLUDES) $(LIBS) $(LDLIBS) -o $@ $<
 
 ./src/lib.a: $(OBJECTS)
@@ -19,10 +22,11 @@ main: ./src/lib.a $(SOURCE)
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
+
 .PHONY: clean
 
 clean:
 	find . -name "*.o" -delete
 	find . -name "*.a" -delete
-	find . -name "main" -delete
+	find . -name "dp" -delete
 

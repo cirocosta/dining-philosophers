@@ -2,6 +2,8 @@
 #define MONITOR_H
 
 #include <semaphore.h>
+#include <pthread.h>
+#include <queue>
 
 /**
  * A Monitor implementation using * semaphores.
@@ -20,15 +22,23 @@
  */
 class Monitor
 {
+  // any process that wants to execute a
+  // procedure from our monitor must first go to
+  // the monitor queue and then wait there till
+  // its time.
+  std::queue<unsigned> m_MonitorQueue;
+  bool* m_Forks;
   sem_t m_Entrance;
+  pthread_cond_t* m_ForksCv;
+  unsigned m_PhilCount;
 public:
   /**
    * Must establish the invariant that procedures
    * will have to maintain.
    */
-  Monitor ();
+  Monitor(unsigned philosophers);
   ~Monitor();
-
+private:
   /**
    * Verifies whether the queue is empty.
    */
@@ -40,13 +50,33 @@ public:
    * the cv's queue and relinquish exclusive
    * access to the monitor.
    */
-  void wait(void* cv);
+  void wait(unsigned id);
 
   /**
    * Awakens the process at the front of the
    * queue (cv).
    */
-  void signal(void* cv);
+  void signal(unsigned id);
+public:
+  void callEntry (unsigned id)
+  {
+    sem_wait(&m_Entrance);
+    if (!m_MonitorQueue.empty())
+      m_MonitorQueue.push(id);
+    sem_post(&m_Entrance);
+  }
+
+  void consumeEntry ()
+  {
+    sem_wait(&m_Entrance);
+    /* unsigned procId = m_MonitorQueue.front(); */
+  }
+
+  void pick(unsigned id);
+  void pickOdd(unsigned id);
+
+  void release(unsigned id);
+  void releaseOdd(unsigned id);
 };
 
 #endif
