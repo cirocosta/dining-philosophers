@@ -26,7 +26,7 @@ class Monitor
   // procedure from our monitor must first go to
   // the monitor queue and then wait there till
   // its time.
-  std::queue<unsigned> m_MonitorQueue;
+  std::queue<unsigned> m_EntryQueue;
   bool* m_Forks;
   sem_t m_Entrance;
   pthread_cond_t* m_ForksCv;
@@ -58,20 +58,6 @@ private:
    */
   void signal(unsigned id);
 public:
-  void callEntry (unsigned id)
-  {
-    sem_wait(&m_Entrance);
-    if (!m_MonitorQueue.empty())
-      m_MonitorQueue.push(id);
-    sem_post(&m_Entrance);
-  }
-
-  void consumeEntry ()
-  {
-    sem_wait(&m_Entrance);
-    /* unsigned procId = m_MonitorQueue.front(); */
-  }
-
   void pick(unsigned id);
   void pickOdd(unsigned id);
 
