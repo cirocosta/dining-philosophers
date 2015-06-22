@@ -1,7 +1,7 @@
 #include "Input.hpp"
 
 Input::Input()
-  : foodCount(0), isUniform(false), philCount(0)
+  : foodCount(0), isUniform(false), philCount(0), sumWeights(0)
 { }
 
 Input::~Input()
@@ -26,12 +26,16 @@ void Input::parse_input(const int& argc, const char** argv)
   infile >> philCount;
   weights = new int[philCount];
 
-  for (unsigned i = 0; i < philCount; i++)
+  for (unsigned i = 0; i < philCount; i++) {
     infile >> weights[i];
+    sumWeights += weights[i];
+  }
+
   infile.close();
 
   foodCount = parse_int(argv[2]);
-  isUniform = argv[3][0] == 'U' ? true : false;
+  isUniform = argv[3][0] == 'U' || argv[3][0] == 'u' ?
+    true : false;
 }
 
 unsigned Input::parse_int(const char* c)

@@ -16,6 +16,7 @@ public:
   unsigned foodCount;
   bool isUniform;
   unsigned philCount;
+  unsigned sumWeights;
 public:
   Input();
   ~Input();
@@ -29,6 +30,7 @@ public:
       os << std::to_string(in.weights[i]) << ",";
 
     os << endl
+       << "sumWeights" << in.sumWeights << endl
        << "foodCount: " << in.foodCount << endl
        << "isUniform: " << in.isUniform << endl
        << "philCount:" << in.philCount;
