@@ -1,60 +1,32 @@
 #ifndef PHILOSOPHER_HPP
 #define PHILOSOPHER_HPP
 
-#include "Forks.hpp"
+#include "Food.hpp"
 
 #include <chrono>
 #include <random>
 #include <thread>
+#include <memory>
 
-std::mt19937_64 eng{std::random_device{}()};
-
-class EvenPhilosopher;
-class OddPhilosopher;
+class Philosopher;
+typedef std::unique_ptr<Philosopher> PhilPtr;
 
 class Philosopher
 {
 protected:
   unsigned m_id;
   unsigned m_eaten;
-  unsigned m_weight;
+  bool m_isOdd;
+  unsigned m_amountToEat;
 public:
-  void think()
-  {
-    std::uniform_int_distribution<> dist{50, 100};
-    std::this_thread::sleep_for(
-      std::chrono::milliseconds{dist(eng)}
-    );
-  }
+  Philosopher (unsigned id, unsigned amountToEat);
 
-  Philosopher generate (unsigned i)
-  {
-    EvenPhilosopher phil (i);
+  void operator()(Food& food, Philosopher& phil);
+  void think();
+  void print();
 
-    return phil;
-  }
+  inline bool hungry () { return m_amountToEat > 0; }
+
 };
-
-class EvenPhilosopher: public Philosopher
-{
-public:
-  EvenPhilosopher(){}
-
-  void operator()(Forks& forks)
-  {
-    forks.acquireForks(m_id);
-  }
-};
-
-class OddPhilosopher : public Philosopher
-{
-  OddPhilosopher(){}
-
-  void operator()(Forks& forks)
-  {
-    forks.acquireForksOdd(m_id);
-  }
-};
-
 
 #endif
