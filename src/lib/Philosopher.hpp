@@ -26,7 +26,6 @@ public:
   void print();
 
   inline bool hungry () { return m_amountToEat > 0; }
-
 };
 
 #endif

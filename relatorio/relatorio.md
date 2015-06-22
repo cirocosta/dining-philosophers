@@ -87,4 +87,7 @@ P37,14; P38,14; P39,14;
 
 ![Gráfico Gerado - Muitos P](muitos-p.png)
 
+#### Conlusões
+
+Nos testes os resultados foram de acordo com o esperado, convergindo ao que desejávamos desde que tivessemos comida o suficiente para os filósofos.
 
